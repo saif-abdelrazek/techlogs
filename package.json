@@ -14,11 +14,15 @@
     "react-dom": "$react-dom"
   },
   "dependencies": {
+    "cloudinary": "^2.7.0",
     "framer-motion": "^12.19.2",
     "next": "15.3.4",
     "next-auth": "^5.0.0-beta.29",
+    "next-cloudinary": "^6.16.0",
+    "next-themes": "^0.4.6",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "zod": "^3.25.67"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
@@ -28,6 +32,7 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "15.3.4",
+    "prisma": "^6.10.1",
     "tailwindcss": "^4",
     "typescript": "^5"
   }
