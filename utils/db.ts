@@ -82,11 +82,14 @@ export const createUser = async (
       message: "User created successfully",
       user: userWithoutPw,
     };
-  } catch (error: string | any) {
+  } catch (error: unknown) {
     console.error("Error creating user:", error);
     return {
       success: false,
-      message: error.message || "Failed to create user",
+      message:
+        typeof error === "object" && error !== null && "message" in error
+          ? String((error as { message?: string }).message)
+          : "Failed to create user",
       user: null,
     };
   }
