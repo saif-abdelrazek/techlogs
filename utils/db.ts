@@ -30,7 +30,7 @@ export const getUserFromDb = async (
       throw new Error("Invalid credentials");
     }
 
-    // This change the name of the password const since their is another one in the function scope
+    // This changes the name of the password const since there is another one in the function scope
     const { password: userPassword, ...userWithoutPW } = user;
 
     return {
