@@ -1,6 +1,5 @@
 import { createUser } from "@/utils/db";
 import { signUpSchema } from "@/lib/zod";
-import { isValid } from "zod";
 import { UserResponse } from "@/types/userTypes";
 import { signUp } from "@/utils/signup";
 
