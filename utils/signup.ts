@@ -10,15 +10,15 @@ export const signUp = async (
   confirmPassword: string
 ): Promise<void> => {
   try {
-    const { error } = signUpSchema.safeParse({
+    const result = signUpSchema.safeParse({
       firstName,
       lastName,
       email,
       password,
       confirmPassword,
     });
-    if (error) {
-      throw new Error(error.message);
+    if (!result.success) {
+      throw new Error(result.error.message);
     }
 
     const name = `${firstName} ${lastName}`.trim();
