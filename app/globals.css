@@ -1,5 +1,24 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Theme transition animations */
+* {
+  transition: background-color 0.3s ease, border-color 0.3s ease,
+    color 0.3s ease;
+}
+
+*:before,
+*:after {
+  transition: background-color 0.3s ease, border-color 0.3s ease,
+    color 0.3s ease;
+}
+
+/* Smooth html background transitions */
+html {
+  transition: background-color 0.3s ease;
+}
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
@@ -21,6 +40,29 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Prevent Next.js image loading flash */
+img[data-nimg] {
+  opacity: 1 !important;
+}
+
+/* Logo image preload to prevent flash */
+.logo-image {
+  display: block !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+/* Theme toggle button - prevent flash */
+.theme-toggle-btn {
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+.theme-toggle-btn svg {
+  opacity: 1 !important;
+  visibility: visible !important;
 }
 
 /* Custom utility classes as fallback */

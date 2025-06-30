@@ -3,7 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "db:dev:up": "docker compose -f docker-compose.yml up saifDB-dev -d",
+    "db:dev:down": "docker compose -f docker-compose.yml down saifDB-dev",
     "dev": "next dev --turbopack",
+    "first:dev": "npm run db:dev:up && next dev --turbopack",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
@@ -14,20 +17,34 @@
     "react-dom": "$react-dom"
   },
   "dependencies": {
+    "@auth/core": "^0.40.0",
+    "@auth/prisma-adapter": "^2.10.0",
+    "@paralleldrive/cuid2": "^2.2.2",
+    "@prisma/client": "^6.10.1",
+    "argon2-browser": "^1.18.0",
+    "base64-loader": "^1.0.0",
+    "bcryptjs": "^3.0.2",
+    "cloudinary": "^2.7.0",
     "framer-motion": "^12.19.2",
     "next": "15.3.4",
     "next-auth": "^5.0.0-beta.29",
+    "next-cloudinary": "^6.16.0",
+    "next-themes": "^0.4.6",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "uuid": "^11.1.0",
+    "zod": "^3.25.67"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4",
+    "@types/bcryptjs": "^3.0.0",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "15.3.4",
+    "prisma": "^6.10.1",
     "tailwindcss": "^4",
     "typescript": "^5"
   }
