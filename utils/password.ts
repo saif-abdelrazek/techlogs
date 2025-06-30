@@ -1,7 +1,24 @@
-export const saltAndHashPassword = (password: string): string => {
-  // This is a placeholder for the actual hashing logic.
-  // In a real application, you would use a library like bcrypt or argon2.
-  const salt = "random_salt"; // Replace with actual salt generation
-  const hashedPassword = `${salt}${password}`; // Replace with actual hashing logic
-  return hashedPassword;
+import bcrypt from "bcryptjs";
+
+export const hashPassword = async (password: string): Promise<string> => {
+  try {
+    const salt = await bcrypt.genSalt(10);
+    const hash = await bcrypt.hash(password, salt);
+    return hash;
+  } catch (error) {
+    console.error("Error hashing password:", error);
+    throw new Error("Failed to hash password");
+  }
+};
+
+export const verifyPassword = async (
+  password: string,
+  hash: string
+): Promise<boolean> => {
+  try {
+    return await bcrypt.compare(password, hash);
+  } catch (error) {
+    console.error("Error verifying password:", error);
+    throw new Error("Failed to verify password");
+  }
 };
