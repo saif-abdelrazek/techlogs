@@ -74,7 +74,7 @@ export const createUser = async (
       throw new Error("Failed to create user");
     }
 
-    // This change the name of the password const since their is another one in the function scope
+    // This changes the name of the password const since there is another one in the function scope
     const { password: userPassword, ...userWithoutPw } = user;
 
     return {
