@@ -14,7 +14,9 @@ async function page() {
       </div>
     );
   }
-  console.log("Session:", session);
+  if (process.env.NODE_ENV === "development") {
+    console.log("Session:", session);
+  }
 
   return (
     <div className="flex items-center justify-center h-screen">
