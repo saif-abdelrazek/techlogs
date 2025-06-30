@@ -1,13 +1,32 @@
-import { signIn } from "@/auth";
+import { createUser } from "@/utils/db";
+import { signUpSchema } from "@/lib/zod";
+import { isValid } from "zod";
+import { UserResponse } from "@/types/userTypes";
+import { signUp } from "@/utils/signup";
 
 export function SignUp() {
   return (
     <form
-      action={async (formData) => {
+      action={async (formData): Promise<void> => {
         "use server";
-        // You'll need to implement the signup logic
-        // For now, we'll redirect to sign in after "signup"
-        await signIn("credentials", { credentials: formData });
+        try {
+          // Convert FormData to object
+          const formDataObject = {
+            firstName: formData.get("firstName") as string,
+            lastName: formData.get("lastName") as string,
+            email: formData.get("email") as string,
+            password: formData.get("password") as string,
+            confirmPassword: formData.get("confirmPassword") as string,
+            agreeToTerms: formData.get("agreeToTerms") === "on",
+          };
+
+          const { firstName, lastName, email, password, confirmPassword } =
+            formDataObject;
+
+          await signUp(firstName, lastName, email, password, confirmPassword);
+        } catch (error: any) {
+          console.error("Error during sign-up:", error);
+        }
       }}
       className="w-full space-y-4"
     >

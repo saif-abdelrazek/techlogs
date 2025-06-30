@@ -1,11 +1,15 @@
-import { signIn } from "@/auth";
+import { signIn } from "@/lib/auth";
 
 export function SignIn() {
   return (
     <form
       action={async (formData) => {
         "use server";
-        await signIn("credentials", formData);
+        try {
+          await signIn("credentials", formData);
+        } catch (error: any) {
+          console.error("Error during sign-in:", error);
+        }
       }}
       className="w-full space-y-4"
     >

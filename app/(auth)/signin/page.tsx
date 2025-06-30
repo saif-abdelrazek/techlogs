@@ -2,15 +2,11 @@ import Link from "next/link";
 import { SignIn } from "@/components/credentials-sign-in";
 import GHSignIn from "@/components/github-sign-in";
 import GoogleSignIn from "@/components/google-sign-in";
-import { auth } from "@/auth";
+import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 
 export default async function SignInPage() {
   const session = await auth();
-
-  if (session) {
-    redirect("/dashboard");
-  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 flex items-center justify-center px-4 py-12">
