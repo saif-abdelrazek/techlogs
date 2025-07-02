@@ -14,10 +14,14 @@ const config: Config = {
         "primary-white": "#ffffff",
       },
       fontFamily: {
-        "work-sans": ["var(--font-geist-sans)", "sans-serif"],
+        sans: ["var(--font-jakarta)", "system-ui", "sans-serif"],
+        heading: ["var(--font-manrope)", "system-ui", "sans-serif"],
+        mono: ["var(--font-jetbrains)", "monospace"],
       },
     },
   },
+  darkMode: "class",
+  plugins: [require("@tailwindcss/line-clamp")],
 };
 
 export default config;

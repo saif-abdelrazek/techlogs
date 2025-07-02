@@ -16,15 +16,15 @@ function HomeFooter() {
                   width={32}
                   height={32}
                 />
-                <span className="text-xl font-bold text-primary-blue">
+                <span className="text-xl font-bold font-heading text-primary-blue">
                   Tech
                 </span>
-                <span className="text-xl font-bold text-gray-900 dark:text-white">
+                <span className="text-xl font-bold font-heading text-gray-900 dark:text-white">
                   Logs
                 </span>
               </div>
             </div>
-            <p className="text-gray-600 dark:text-gray-400 text-sm max-w-md">
+            <p className="text-gray-700 dark:text-gray-400 text-sm font-sans max-w-md">
               Your premier destination for technology insights, development
               tutorials, and industry trends. Join our community of developers
               and tech enthusiasts.
@@ -33,86 +33,59 @@ function HomeFooter() {
 
           {/* Quick Links */}
           <div>
-            <h3 className="font-semibold text-gray-900 dark:text-white mb-4">
+            <h3 className="font-semibold font-heading text-gray-900 dark:text-white mb-4">
               Quick Links
             </h3>
-            <ul className="space-y-2 text-sm">
-              <li>
-                <a
-                  href="/about"
-                  className="text-gray-600 dark:text-gray-400 hover:text-primary-blue transition-colors"
-                >
-                  About
-                </a>
-              </li>
-              <li>
-                <a
-                  href="/contact"
-                  className="text-gray-600 dark:text-gray-400 hover:text-primary-blue transition-colors"
-                >
-                  Contact
-                </a>
-              </li>
-              <li>
-                <a
-                  href="/blog"
-                  className="text-gray-600 dark:text-gray-400 hover:text-primary-blue transition-colors"
-                >
-                  Blog
-                </a>
-              </li>
-              <li>
-                <a
-                  href="/categories"
-                  className="text-gray-600 dark:text-gray-400 hover:text-primary-blue transition-colors"
-                >
-                  Categories
-                </a>
-              </li>
+            <ul className="space-y-2 text-sm font-sans">
+              {[
+                { href: "/about", label: "About" },
+                { href: "/contact", label: "Contact" },
+                { href: "/blog", label: "Blog" },
+                { href: "/categories", label: "Categories" },
+              ].map((link) => (
+                <li key={link.href}>
+                  <a
+                    href={link.href}
+                    className="text-gray-700 dark:text-gray-400 hover:text-blue-500 transition-colors"
+                  >
+                    {link.label}
+                  </a>
+                </li>
+              ))}
             </ul>
           </div>
 
           {/* Legal */}
           <div>
-            <h3 className="font-semibold text-gray-900 dark:text-white mb-4">
+            <h3 className="font-semibold font-heading text-gray-900 dark:text-white mb-4">
               Legal
             </h3>
-            <ul className="space-y-2 text-sm">
-              <li>
-                <a
-                  href="/privacy"
-                  className="text-gray-600 dark:text-gray-400 hover:text-primary-blue transition-colors"
-                >
-                  Privacy Policy
-                </a>
-              </li>
-              <li>
-                <a
-                  href="/terms"
-                  className="text-gray-600 dark:text-gray-400 hover:text-primary-blue transition-colors"
-                >
-                  Terms of Service
-                </a>
-              </li>
-              <li>
-                <a
-                  href="/cookies"
-                  className="text-gray-600 dark:text-gray-400 hover:text-primary-blue transition-colors"
-                >
-                  Cookie Policy
-                </a>
-              </li>
+            <ul className="space-y-2 text-sm font-sans">
+              {[
+                { href: "/privacy", label: "Privacy Policy" },
+                { href: "/terms", label: "Terms of Service" },
+                { href: "/cookies", label: "Cookie Policy" },
+              ].map((link) => (
+                <li key={link.href}>
+                  <a
+                    href={link.href}
+                    className="text-gray-600 dark:text-gray-400 hover:text-primary-blue transition-colors"
+                  >
+                    {link.label}
+                  </a>
+                </li>
+              ))}
             </ul>
           </div>
         </div>
 
         {/* Bottom */}
         <div className="mt-8 pt-8 border-t border-gray-200 dark:border-gray-700 flex flex-col sm:flex-row justify-between items-center">
-          <p className="text-xs text-gray-600 dark:text-gray-400">
+          <p className="text-xs font-sans text-gray-600 dark:text-gray-400">
             © {new Date().getFullYear()} TechLogs. All rights reserved.
           </p>
           <div className="flex items-center space-x-4 mt-4 sm:mt-0">
-            <span className="text-xs text-gray-600 dark:text-gray-400">
+            <span className="text-xs font-sans text-gray-600 dark:text-gray-400">
               Follow us:
             </span>
             <div className="flex space-x-3">

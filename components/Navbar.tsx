@@ -76,10 +76,10 @@ function Navbar() {
                     className="opacity-90 group-hover:opacity-100 transition-opacity duration-200 logo-image"
                   />
                 </motion.div>
-                <span className="text-xl font-bold text-primary-blue">
+                <span className="text-xl font-bold font-heading text-primary-blue">
                   Tech
                 </span>
-                <span className="text-xl font-bold text-gray-900 dark:text-white">
+                <span className="text-xl font-bold font-heading text-gray-900 dark:text-white">
                   Logs
                 </span>
               </div>
@@ -101,7 +101,7 @@ function Navbar() {
                 >
                   <Link
                     href={link.href}
-                    className="text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-primary-blue transition-colors duration-200"
+                    className="text-sm font-medium font-sans text-gray-700 dark:text-gray-300 hover:text-primary-blue transition-colors duration-200"
                   >
                     {link.label}
                   </Link>
@@ -115,28 +115,6 @@ function Navbar() {
             variants={itemVariants}
             className="flex items-center space-x-4"
           >
-            {/* Search Button */}
-            <motion.button
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.95 }}
-              className="p-2 text-gray-600 dark:text-gray-400 hover:text-primary-blue hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-all duration-200"
-            >
-              <svg
-                className="w-5 h-5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                />
-              </svg>
-              <span className="sr-only">Search</span>
-            </motion.button>
-
             {/* Theme Toggle Button */}
             <ToggleThemeBtn />
 
@@ -153,15 +131,20 @@ function Navbar() {
                 <div className="flex items-center space-x-3">
                   <motion.div
                     variants={itemVariants}
-                    className="flex items-center space-x-2 text-sm text-gray-700 dark:text-gray-300"
+                    className="flex items-center space-x-2 text-sm font-sans text-gray-700 dark:text-gray-300"
                   >
                     <span>Welcome,</span>
-                    <span className="font-medium text-primary-blue">
+                    <span className="font-medium font-heading text-primary-blue">
                       {session.user?.name || session.user?.email}
                     </span>
                   </motion.div>
-                  <motion.div variants={itemVariants}>
-                    <SignoutBtn size="sm" variant="outline" />
+                  <motion.div>
+                    <Link
+                      href="/dashboard"
+                      className="text-sm font-medium font-sans px-4 py-2.5 rounded-xl text-primary-white dark:text-gray-300 hover:text-blue-500 bg-primary-blue transition-colors duration-200"
+                    >
+                      Dashboard
+                    </Link>
                   </motion.div>
                 </div>
               ) : (
@@ -174,7 +157,7 @@ function Navbar() {
                   >
                     <Link
                       href="/signin"
-                      className="text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-primary-blue transition-colors duration-200"
+                      className="text-sm font-medium font-sans text-gray-700 dark:text-gray-300 hover:text-primary-blue transition-colors duration-200"
                     >
                       Sign In
                     </Link>
@@ -187,7 +170,7 @@ function Navbar() {
                   >
                     <Link
                       href="/signup"
-                      className="bg-primary-blue hover:bg-blue-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg"
+                      className="bg-primary-blue hover:bg-blue-700 text-white text-sm font-medium font-sans px-4 py-2 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg"
                     >
                       Get Started
                     </Link>
@@ -271,7 +254,7 @@ function Navbar() {
                       >
                         <Link
                           href={link.href}
-                          className="flex items-center justify-center w-full px-4 py-3 text-base font-medium text-gray-700 dark:text-gray-300 hover:text-primary-blue hover:bg-gray-50 dark:hover:bg-gray-800 transition-all duration-200 rounded-lg active:bg-gray-100 dark:active:bg-gray-700 text-center"
+                          className="flex items-center justify-center w-full px-4 py-3 text-base font-medium font-sans text-gray-700 dark:text-gray-300 hover:text-blue-500 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200 rounded-lg active:bg-gray-100 dark:active:bg-gray-700 text-center"
                           onClick={() => setIsMobileMenuOpen(false)}
                         >
                           {link.label}
@@ -293,22 +276,28 @@ function Navbar() {
                       </div>
                     ) : session ? (
                       <div className="space-y-3">
-                        <div className="text-center text-sm text-gray-700 dark:text-gray-300 py-2">
+                        <div className="text-center text-sm font-sans text-gray-700 dark:text-gray-300 py-2">
                           <span>Welcome,</span>
                           <br />
-                          <span className="font-medium text-primary-blue">
+                          <span className="font-medium font-heading text-primary-blue">
                             {session.user?.name || session.user?.email}
                           </span>
                         </div>
                         <div className="flex justify-center">
-                          <SignoutBtn size="md" className="w-full" />
+                          <Link
+                            href="/dashboard"
+                            className="flex items-center justify-center w-full px-4 py-3 text-base font-medium font-sans bg-primary-blue text-white hover:bg-blue-700 transition-all duration-200 rounded-lg text-center"
+                            onClick={() => setIsMobileMenuOpen(false)}
+                          >
+                            Dashboard
+                          </Link>
                         </div>
                       </div>
                     ) : (
                       <>
                         <Link
                           href="/signin"
-                          className="flex items-center justify-center w-full px-4 py-3 text-base font-medium text-gray-700 dark:text-gray-300 hover:text-primary-blue hover:bg-gray-50 dark:hover:bg-gray-800 transition-all duration-200 rounded-lg active:bg-gray-100 dark:active:bg-gray-700 text-center"
+                          className="flex items-center justify-center w-full px-4 py-3 text-base font-medium font-sans text-gray-700 dark:text-gray-300 hover:text-primary-blue hover:bg-gray-50 dark:hover:bg-gray-800 transition-all duration-200 rounded-lg active:bg-gray-100 dark:active:bg-gray-700 text-center"
                           onClick={() => setIsMobileMenuOpen(false)}
                         >
                           Sign In
@@ -319,7 +308,7 @@ function Navbar() {
                         >
                           <Link
                             href="/signup"
-                            className="flex items-center justify-center w-full px-4 py-3 bg-primary-blue hover:bg-blue-700 text-white text-base font-medium rounded-lg transition-all duration-200 text-center active:bg-blue-800 shadow-sm"
+                            className="flex items-center justify-center w-full px-4 py-3 bg-primary-blue hover:bg-blue-700 text-white text-base font-medium font-sans rounded-lg transition-all duration-200 text-center active:bg-blue-800 shadow-sm"
                             onClick={() => setIsMobileMenuOpen(false)}
                           >
                             Get Started
