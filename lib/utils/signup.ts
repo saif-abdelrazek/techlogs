@@ -1,5 +1,5 @@
 import { UserResponse } from "@/types/userTypes";
-import { createUser } from "@/utils/db";
+import { createUser } from "@/lib/utils/db";
 import { signUpSchema } from "@/lib/zod";
 
 export const signUp = async (

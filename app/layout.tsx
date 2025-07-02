@@ -1,16 +1,24 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { MainProvider } from "@/contexts/MainContext";
+import { JetBrains_Mono, Plus_Jakarta_Sans, Manrope } from "next/font/google";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const jakarta = Plus_Jakarta_Sans({
+  variable: "--font-jakarta",
   subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const jetbrains = JetBrains_Mono({
+  variable: "--font-jetbrains",
   subsets: ["latin"],
+  weight: ["400", "500", "600"],
+});
+
+const manrope = Manrope({
+  variable: "--font-manrope",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
 });
 
 export const metadata: Metadata = {
@@ -49,7 +57,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="scroll-smooth">
+    <html lang="en" className="scroll-smooth" suppressHydrationWarning>
       <head>
         <link rel="icon" href="/favicon.ico" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
@@ -69,7 +77,8 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased text-gray-900 bg-gray-50 dark:text-gray-100 dark:bg-primary-black transition-colors duration-300 min-h-screen`}
+        className={`${jakarta.variable} ${jetbrains.variable} ${manrope.variable} antialiased text-gray-900 bg-gray-50 dark:text-gray-100 dark:bg-primary-black transition-colors duration-300 min-h-screen`}
+        suppressHydrationWarning
       >
         {/* Main Provider */}
         <MainProvider>
