@@ -1,4 +1,4 @@
-import db from "../lib/prisma";
+import db from "../prisma";
 import { verifyPassword, hashPassword } from "./password";
 import { createUserSchema, signUpSchema } from "@/lib/zod";
 import { UserResponse } from "@/types/userTypes";
@@ -50,6 +50,16 @@ export const createUser = async (
   password: string
 ): Promise<UserResponse> => {
   try {
+    const existingUser = await db.user.findUnique({
+      where: {
+        email,
+      },
+    });
+
+    if (existingUser) {
+      throw new Error("User with this email already exists");
+    }
+
     const hashedPassword = await hashPassword(password);
 
     const { error } = createUserSchema.safeParse({

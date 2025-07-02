@@ -4,7 +4,7 @@ import Google from "next-auth/providers/google";
 import { encode } from "next-auth/jwt";
 import Credentials from "next-auth/providers/credentials";
 import { signInSchema } from "./zod";
-import { getUserFromDb } from "../utils/db";
+import { getUserFromDb } from "./utils/db";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import db from "./prisma";
 import { v4 as uuid } from "uuid";

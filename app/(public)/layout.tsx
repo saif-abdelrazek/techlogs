@@ -11,7 +11,7 @@ export default function Layout({
         <Navbar />
       </header>
       {/* Main Content Area */}
-      <main className="flex-1 font-work-sans">
+      <main className="flex-1 font-sans">
         <div className="relative">
           {/* Content with proper spacing and responsive design */}
           <div className="w-full">{children}</div>
