@@ -1,4 +1,5 @@
-import db from "../prisma";
+
+import {prisma} from "../prisma";
 import { verifyPassword, hashPassword } from "./password";
 import { createUserSchema, signUpSchema } from "@/lib/zod";
 import { UserResponse } from "@/types/userTypes";
@@ -7,8 +8,9 @@ export const getUserFromDb = async (
   email: string,
   password: string
 ): Promise<UserResponse> => {
+  "use server";
   try {
-    const user = await db.user.findUnique({
+    const user = await prisma.user.findUnique({
       where: {
         email,
       },
@@ -39,7 +41,6 @@ export const getUserFromDb = async (
       user: userWithoutPW,
     };
   } catch (error) {
-    console.error("Error fetching user from database:", error);
     return { success: false, message: "Failed to fetch user" };
   }
 };
@@ -49,8 +50,9 @@ export const createUser = async (
   email: string,
   password: string
 ): Promise<UserResponse> => {
+  "use server";
   try {
-    const existingUser = await db.user.findUnique({
+    const existingUser = await prisma.user.findUnique({
       where: {
         email,
       },
@@ -72,7 +74,7 @@ export const createUser = async (
       throw new Error(error.message);
     }
 
-    const user = await db.user.create({
+    const user = await prisma.user.create({
       data: {
         name,
         email,
@@ -93,7 +95,6 @@ export const createUser = async (
       user: userWithoutPw,
     };
   } catch (error: unknown) {
-    console.error("Error creating user:", error);
     return {
       success: false,
       message:
