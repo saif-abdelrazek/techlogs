@@ -6,10 +6,10 @@ import Credentials from "next-auth/providers/credentials";
 import { signInSchema } from "./zod";
 import { getUserFromDb } from "./utils/db";
 import { PrismaAdapter } from "@auth/prisma-adapter";
-import db from "./prisma";
+import {prisma} from "./prisma";
 import { v4 as uuid } from "uuid";
 
-const prismaAdapter = PrismaAdapter(db);
+const prismaAdapter = PrismaAdapter(prisma);
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   adapter: prismaAdapter,
