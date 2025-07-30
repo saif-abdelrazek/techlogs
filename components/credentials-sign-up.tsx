@@ -1,6 +1,3 @@
-// components/credentials-sign-up.tsx
-"use client";
-
 import { useActionState } from "react";
 import { signUpAction } from "@/actions/signup";
 
