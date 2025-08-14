@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { MainProvider } from "@/contexts/MainContext";
 import { JetBrains_Mono, Plus_Jakarta_Sans, Manrope } from "next/font/google";
+import 'easymde/dist/easymde.min.css';
+import Script from "next/script";
 
 const jakarta = Plus_Jakarta_Sans({
   variable: "--font-jakarta",
@@ -63,18 +65,21 @@ export default function RootLayout({
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
         <meta name="theme-color" content="#1987DD" />
         <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              try {
-                if (localStorage.getItem('techlogs-theme') === 'dark' || (localStorage.getItem('techlogs-theme') === null && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-                  document.documentElement.classList.add('dark')
-                } else {
-                  document.documentElement.classList.remove('dark')
-                }
-              } catch (_) {}
-            `,
-          }}
-        />
+          defer
+          src="https://umami.saifdev.org/script.js"
+          data-website-id="2f18a39a-e419-4ca9-a350-35985b5acf7c"
+        ></script>
+
+        {/* Define isSpace function globally to fix markdown-it issues with Next.js + Turbopack */}
+          <Script id="markdown-it-fix" strategy="beforeInteractive">
+          {`
+            if (typeof window !== 'undefined' && typeof window.isSpace === 'undefined') {
+              window.isSpace = function(code) {
+                return code === 0x20 || code === 0x09 || code === 0x0A || code === 0x0B || code === 0x0C || code === 0x0D;
+              };
+            }
+          `}
+        </Script>
       </head>
       <body
         className={`${jakarta.variable} ${jetbrains.variable} ${manrope.variable} antialiased text-gray-900 bg-gray-50 dark:text-gray-100 dark:bg-primary-black transition-colors duration-300 min-h-screen`}

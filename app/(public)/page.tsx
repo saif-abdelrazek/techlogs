@@ -1,7 +1,12 @@
 import React from "react";
 import MostViewedProjects from "@/components/MostViewedProjects";
+import Link from "next/link";
 
-function HomePage() {
+
+async function HomePage ({ }: {
+  searchParams: Promise<{ q: string }>
+}) {
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
       {/* Hero Section */}
@@ -21,18 +26,12 @@ function HomePage() {
             tech enthusiasts.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <a
-              href="/blog"
-              className="inline-block bg-primary-blue hover:bg-blue-600 text-white font-medium py-4 px-8 rounded-xl shadow-lg transition-all duration-300"
-            >
-              Explore Blog
-            </a>
-            <a
+            <Link
               href="/projects"
               className="inline-block border-2 border-primary-blue text-primary-blue hover:bg-primary-blue hover:text-white font-medium py-4 px-8 rounded-xl transition-all duration-300"
             >
               View Projects
-            </a>
+            </Link>
           </div>
         </div>
       </section>

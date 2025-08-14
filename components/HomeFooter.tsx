@@ -30,53 +30,6 @@ function HomeFooter() {
               and tech enthusiasts.
             </p>
           </div>
-
-          {/* Quick Links */}
-          <div>
-            <h3 className="font-semibold font-heading text-gray-900 dark:text-white mb-4">
-              Quick Links
-            </h3>
-            <ul className="space-y-2 text-sm font-sans">
-              {[
-                { href: "/about", label: "About" },
-                { href: "/contact", label: "Contact" },
-                { href: "/blog", label: "Blog" },
-                { href: "/categories", label: "Categories" },
-              ].map((link) => (
-                <li key={link.href}>
-                  <a
-                    href={link.href}
-                    className="text-gray-700 dark:text-gray-400 hover:text-blue-500 transition-colors"
-                  >
-                    {link.label}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Legal */}
-          <div>
-            <h3 className="font-semibold font-heading text-gray-900 dark:text-white mb-4">
-              Legal
-            </h3>
-            <ul className="space-y-2 text-sm font-sans">
-              {[
-                { href: "/privacy", label: "Privacy Policy" },
-                { href: "/terms", label: "Terms of Service" },
-                { href: "/cookies", label: "Cookie Policy" },
-              ].map((link) => (
-                <li key={link.href}>
-                  <a
-                    href={link.href}
-                    className="text-gray-600 dark:text-gray-400 hover:text-primary-blue transition-colors"
-                  >
-                    {link.label}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
         </div>
 
         {/* Bottom */}

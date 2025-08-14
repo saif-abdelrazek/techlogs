@@ -14,8 +14,15 @@ export default async function Layout({
     return <Loader />;
   }
 
-  if (session) {
-    redirect("/dashboard");
+  let redirectTo; 
+  try {
+    if (session && session.user) {
+      redirectTo = "/dashboard";
+    }
+  } finally {
+    if (redirectTo) {
+      redirect(redirectTo);
+    }
   }
 
   return (

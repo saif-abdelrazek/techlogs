@@ -1,3 +1,5 @@
+"use server";
+
 import { auth } from "@/lib/auth";
 import React from "react";
 import Image from "next/image";
