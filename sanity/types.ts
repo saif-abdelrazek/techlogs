@@ -46,10 +46,10 @@ export type Project = {
   };
   views?: number;
   description?: string;
+  category?: string;
   image?: string;
   link?: string;
   repository?: string;
-  category?: string;
   pitch?: string;
 };
 
@@ -62,7 +62,6 @@ export type Author = {
   id?: string;
   name?: string;
   email?: string;
-  username?: Slug;
   image?: string;
   bio?: string;
 };
@@ -266,7 +265,7 @@ export type PROJECT_BY_SLUG_QUERYResult = {
   author: {
     id: string | null;
     name: string | null;
-    username: Slug | null;
+    username: null;
     image: string | null;
     bio: string | null;
   } | null;
@@ -289,7 +288,7 @@ export type AUTHOR_BY_ID_QUERYResult = {
   _id: string;
   id: string | null;
   name: string | null;
-  username: Slug | null;
+  username: null;
   email: string | null;
   image: string | null;
   bio: string | null;

@@ -1,5 +1,6 @@
-import { signOut } from "@auth/react";
-import { motion } from "framer-motion";
+"use client";
+
+import { signOut } from "next-auth/react";
 import { useState } from "react";
 
 interface SignoutBtnProps {
@@ -53,12 +54,12 @@ export default function SignoutBtn({
   };
 
   return (
-    <motion.button
+    <button
       onClick={handleSignOut}
       disabled={isLoading}
       className={`
         inline-flex items-center justify-center gap-2 
-        rounded-lg font-medium transition-all duration-200
+        rounded-lg font-medium transition-colors duration-200
         focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2
         dark:focus:ring-offset-gray-900
         disabled:opacity-50 disabled:cursor-not-allowed
@@ -66,41 +67,29 @@ export default function SignoutBtn({
         ${sizes[size]}
         ${className}
       `}
-      whileHover={{ scale: isLoading ? 1 : 1.02 }}
-      whileTap={{ scale: isLoading ? 1 : 0.98 }}
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.2 }}
     >
       {isLoading ? (
-        <motion.div
-          animate={{ rotate: 360 }}
-          transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-          className={`border-2 border-current border-t-transparent rounded-full ${iconSizes[size]}`}
+        <div
+          className={`border-2 border-current border-t-transparent rounded-full animate-spin ${iconSizes[size]}`}
         />
       ) : (
         showIcon && (
-          <motion.div
-            whileHover={{ rotate: 15 }}
-            transition={{ duration: 0.2 }}
+          <svg
+            className={iconSizes[size]}
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
           >
-            <svg
-              className={iconSizes[size]}
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-              <polyline points="16,17 21,12 16,7" />
-              <line x1="21" y1="12" x2="9" y2="12" />
-            </svg>
-          </motion.div>
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+            <polyline points="16,17 21,12 16,7" />
+            <line x1="21" y1="12" x2="9" y2="12" />
+          </svg>
         )
       )}
       {children || (isLoading ? "Signing out..." : "Sign out")}
-    </motion.button>
+    </button>
   );
 }

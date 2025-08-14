@@ -4,6 +4,8 @@ import { auth } from "@/lib/auth";
 import slugify from "slugify";
 import { writeClient } from "@/sanity/lib/write-client";
 import { parseServerActionResponse } from "@/lib/utils/parseServerActionResponse";
+import { client } from "@/sanity/lib/client";
+import { AUTHOR_BY_ID_QUERY } from "@/sanity/lib/queries";
 
 export const createPitch = async (
   state: any,
@@ -18,30 +20,51 @@ export const createPitch = async (
       status: "ERROR",
     });
 
-  const { title, description, category, link } = Object.fromEntries(
+  // Get all form fields correctly
+  const { name, description, category, image, link, repository } = Object.fromEntries(
     Array.from(form).filter(([key]) => key !== "pitch"),
   );
 
-  const slug = slugify(title as string, { lower: true, strict: true });
+  const slug = slugify(name as string, { lower: true, strict: true });
 
   try {
-    const startup = {
-      title,
+    let author = await client.fetch(AUTHOR_BY_ID_QUERY, {
+      id: session.user.id,
+    });
+
+
+        if (!author) {
+      author = await writeClient.create({
+        _type: "author",
+        id: session.user.id,
+        name: session.user.name || "Anonymous User",
+        email: session.user.email || "",
+        image: session.user.image || "",
+        bio: "",
+      });
+    }
+
+    const project = {
+      name,
       description,
       category,
-      image: link,
+      image,
+      link, 
+      repository: repository || "", 
       slug: {
-        _type: slug,
+        _type: "slug",
         current: slug,
       },
       author: {
         _type: "reference",
-        _ref: session?.id,
+        _ref: author._id,
       },
-      pitch,
-    };
+      pitch: pitch || "",
+        views: 0, // Initialize views
+      };
 
-    const result = await writeClient.create({ _type: "startup", ...startup });
+    // Create project document
+    const result = await writeClient.create({ _type: "project", ...project });
 
     return parseServerActionResponse({
       ...result,
@@ -49,8 +72,8 @@ export const createPitch = async (
       status: "SUCCESS",
     });
   } catch (error) {
-    console.log(error);
-
+    console.error("Error creating project:", error);
+    
     return parseServerActionResponse({
       error: JSON.stringify(error),
       status: "ERROR",
