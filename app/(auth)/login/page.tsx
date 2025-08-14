@@ -1,13 +1,8 @@
 import Link from "next/link";
-import { SignIn } from "@/components/credentials-sign-in";
 import GHSignIn from "@/components/github-sign-in";
 import GoogleSignIn from "@/components/google-sign-in";
-import { auth } from "@/lib/auth";
-import { redirect } from "next/navigation";
 
 export default async function SignInPage() {
-  const session = await auth();
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 flex items-center justify-center px-4 py-12">
       {/* Background Pattern */}
@@ -52,41 +47,6 @@ export default async function SignInPage() {
           <div className="space-y-4 mb-6">
             <GoogleSignIn />
             <GHSignIn />
-          </div>
-
-          {/* Divider */}
-          <div className="relative my-8">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-gray-200 dark:border-gray-600"></div>
-            </div>
-            <div className="relative flex justify-center text-sm">
-              <span className="px-4 bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400 font-medium">
-                Or continue with email
-              </span>
-            </div>
-          </div>
-
-          {/* Email Sign In Form */}
-          <SignIn />
-
-          {/* Additional Links */}
-          <div className="mt-6 text-center space-y-3">
-            <Link
-              href="/forgot-password"
-              className="text-sm text-primary-blue hover:text-blue-700 transition-colors duration-200"
-            >
-              Forgot your password?
-            </Link>
-
-            <div className="text-sm text-gray-600 dark:text-gray-400">
-              Don't have an account?{" "}
-              <Link
-                href="/signup"
-                className="text-primary-blue hover:text-blue-700 font-medium transition-colors duration-200"
-              >
-                Sign up
-              </Link>
-            </div>
           </div>
         </div>
 

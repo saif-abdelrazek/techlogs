@@ -1,3 +1,5 @@
+import { Project, Author } from "@/sanity/types";
+
 export type ProjectType = {
   _id: string;
   id: string;
@@ -22,3 +24,5 @@ export type ProjectComponentProps = {
   key: string;
   project: ProjectType;
 };
+
+export type ProjectCardType = Omit<Project, "author"> & { author: Author };

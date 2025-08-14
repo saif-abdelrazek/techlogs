@@ -5,15 +5,18 @@ import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { getAvatarFallback } from "@/lib/utils/generateAvatar";
-import { ProjectType } from "@/types/projectTypes";
+import { handleAvatarImage } from "@/lib/utils/generateAvatar";
+import { ProjectCardType } from "@/types/projectTypes";
+import { AvatarImage, Avatar, AvatarFallback } from "./ui/avatar";
 
-const ProjectCard = ({ post }: { post: ProjectType }) => {
+
+
+const ProjectCard = ({ post }: { post: ProjectCardType }) => {
   const {
     _id,
-    id,
     _createdAt,
     views,
+    slug,
     author,
     name,
     category,
@@ -28,16 +31,20 @@ const ProjectCard = ({ post }: { post: ProjectType }) => {
         "flex flex-col bg-white dark:bg-[#1e293b] border border-blue-200 dark:border-sky-800 rounded-2xl shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden group"
       )}
     >
-      <Link href={`/projects/${id}`} className="block">
+      <Link href={`/projects/${slug?.current}`} className="block">
         <div className="relative aspect-[4/3] bg-blue-100 dark:bg-sky-900 overflow-hidden transition-transform duration-300 group-hover:scale-105">
-          <Image
-            src={image}
-            alt={name}
-            fill
-            className="object-cover object-center"
-            sizes="(max-width: 768px) 100vw, 33vw"
-            draggable={false}
-          />
+          {image ? (
+            <Image
+              src={image}
+              alt={name || "Project Image"}
+              fill
+              className="object-cover"
+            />
+          ) : (
+            <div className="w-full h-full flex items-center justify-center bg-gray-200 dark:bg-gray-700">
+              <span className="text-gray-500">No Image Available</span>
+            </div>
+          )}
         </div>
       </Link>
       <div className="flex flex-col flex-1 p-5 gap-3">
@@ -45,22 +52,24 @@ const ProjectCard = ({ post }: { post: ProjectType }) => {
           <div className="flex items-center gap-2">
             <Link href={`/user/${author?.id}`}>
               {author?.image ? (
-                <Image
-                  src={author.image}
-                  alt={author.name || "Author Avatar"}
-                  width={36}
-                  height={36}
-                  className="rounded-full border border-blue-200 dark:border-sky-800 object-cover"
-                />
+                <Avatar className="size-10">
+                  <AvatarImage
+                    src={author?.image || ""}
+                    alt={author?.name || ""}
+                  />
+                  <AvatarFallback>
+                    {handleAvatarImage(author?.name ?? undefined)}
+                  </AvatarFallback>
+                </Avatar>
               ) : (
                 <div className="w-9 h-9 rounded-full bg-blue-200 dark:bg-sky-800 flex items-center justify-center">
                   <span className="text-base font-medium text-blue-700 dark:text-sky-200">
-                    {getAvatarFallback(author?.name)}
+                    {handleAvatarImage(author?.name)}
                   </span>
                 </div>
               )}
             </Link>
-            <div className="flex flex-col text-start">
+            <div className ="flex flex-col text-start">
               <span className="left-0 block text-sm font-semibold text-blue-700 dark:text-sky-200">Author</span>
               <Link href={`/user/${author?.id}`}>
               <span className="text-sm text-blue-900 dark:text-sky-100">{author?.name}</span>
@@ -72,14 +81,14 @@ const ProjectCard = ({ post }: { post: ProjectType }) => {
             <span className="text-sm text-blue-700 dark:text-sky-200">{views ? views : 0}</span>
           </div>
         </div>
-        <Link href={`/projects/${id}`}>
-          <h3 className="font-bold text-lg text-blue-900 dark:text-sky-100 mb-1 line-clamp-1">{name}</h3>
+        <Link href={`/projects/${slug?.current}`}>
+          <h3 className="font-bold text-start text-lg text-blue-900 dark:text-sky-100 mb-1 line-clamp-1">{name}</h3>
         </Link>
-        <p className="text-sm text-blue-800 dark:text-sky-200 line-clamp-2">{description}</p>
+        <p className="text-sm text-start text-blue-800 dark:text-sky-200 line-clamp-2">{description}</p>
         <div className="flex items-center justify-between mt-auto pt-2">
-          <span className="inline-block bg-blue-100 text-blue-700 dark:bg-sky-900 dark:text-sky-200 px-3 py-1 rounded-full text-xs font-medium">
+          <Link href={`/projects?query=${category}`} className="inline-block bg-blue-100 text-blue-700 dark:bg-sky-900 dark:text-sky-200 px-3 py-1 rounded-full text-xs font-medium">
             {category ? category : "Uncategorized"}
-          </span>
+          </Link>
           <span className="text-xs text-gray-500 dark:text-gray-400">
             {formatDate(_createdAt ? _createdAt : new Date().toISOString())}
           </span>
@@ -88,7 +97,7 @@ const ProjectCard = ({ post }: { post: ProjectType }) => {
           className="rounded-full bg-blue-700 hover:bg-blue-800 dark:bg-sky-700 dark:hover:bg-sky-600 font-medium text-[15px] text-white px-4 py-2 border-none transition mt-3"
           asChild
         >
-          <Link href={`/projects/${id}`}>Details</Link>
+          <Link href={`/projects/${slug?.current}`}>Details</Link>
         </Button>
       </div>
     </li>

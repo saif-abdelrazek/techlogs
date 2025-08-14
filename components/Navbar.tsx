@@ -2,9 +2,9 @@ import Link from "next/link";
 import Image from "next/image";
 import { auth, signOut } from "@/lib/auth";
 import { BadgePlus, LogOut } from "lucide-react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import ModeToggle from "@/components/ModeToggle";
-import { getAvatarFallback } from "@/lib/utils/generateAvatar";
+import { handleAvatarImage } from "@/lib/utils/generateAvatar";
 
 const Navbar = async () => {
   const session = await auth();
@@ -26,7 +26,7 @@ const Navbar = async () => {
           {session && session?.user ? (
             <>
               <Link
-                href="/projects/create"
+                href="/new"
                 className="hover:bg-blue-100 dark:hover:bg-gray-800 px-3 py-2 rounded transition"
               >
                 <span className="max-sm:hidden">Create</span>
@@ -50,26 +50,14 @@ const Navbar = async () => {
 
               <Link href={`/user/${session?.user?.id || ""}`}>
                 <Avatar className="size-10">
-                  <AvatarImage
-                    src={session?.user?.image || ""}
-                    alt={session?.user?.name || ""}
-                  />
-                  <AvatarFallback>
-                    {getAvatarFallback(session?.user?.name ?? undefined)}
-                  </AvatarFallback>
+                  <AvatarImage src={handleAvatarImage(session?.user ?? undefined)} alt={session?.user?.name || ""} />
                 </Avatar>
               </Link>
             </>
           ) : (
             <>
               <Link
-                href="/signin"
-                className="px-4 py-2 rounded-md font-medium hover:bg-blue-100 dark:hover:bg-gray-800 transition"
-              >
-                Login
-              </Link>
-              <Link
-                href="/signup"
+                href="/login"
                 className="bg-blue-600 dark:bg-sky-700 text-white px-4 py-2 rounded-md font-medium hover:bg-blue-700 dark:hover:bg-sky-800 transition"
               >
                 Get Started

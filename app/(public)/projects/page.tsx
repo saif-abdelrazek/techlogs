@@ -1,9 +1,9 @@
 import React from "react";
 import SearchForm from "@/components/SearchForm";
 import ProjectCard from "@/components/ProjectCard";
-import {client} from "@/sanity/lib/client";
 import { PROJECTS_QUERY } from "@/sanity/lib/queries";
-import { ProjectType } from "@/types/projectTypes";
+import { ProjectCardType } from "@/types/projectTypes";
+import { sanityFetch, SanityLive } from "@/sanity/lib/live";
 
 
 
@@ -12,10 +12,13 @@ const ProjectsPage = async ({
   searchParams,
 }: {  searchParams: Promise<{ query?: string }>;}) => {
   const query = (await searchParams).query || "";
+  const params= {search: query  || null}
 
-  const projects = await client.fetch(PROJECTS_QUERY);
+    const { data : projects} = await sanityFetch({query: PROJECTS_QUERY, params})
 
   return (
+    <>
+    
     <div className="min-h-screen bg-gradient-to-br from-gray-50 py-5 via-white to-blue-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 flex flex-col items-center pt-24 px-4">
       <h1 className="text-3xl md:text-4xl font-bold text-blue-900 dark:text-sky-100 mb-10">
         Projects
@@ -29,8 +32,8 @@ const ProjectsPage = async ({
         </p>
         <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {projects.length > 0 ? (
-            projects.map((project: ProjectType) => (
-              <ProjectCard post={project} key={project.id} />
+            projects.map((project: ProjectCardType) => (
+              <ProjectCard post={project} key={project._id} />
             ))
           ) : (
             <p className="col-span-full">No projects found.</p>
@@ -38,6 +41,8 @@ const ProjectsPage = async ({
         </div>
       </div>
     </div>
+    <SanityLive />
+    </>
   );
 }
 export default ProjectsPage;
