@@ -1,6 +1,8 @@
 import {defineField,defineType} from 'sanity'
 import { UserIcon } from 'lucide-react'
 
+import {client} from '@/sanity/lib/client'
+
 export const author = defineType({
     name:"author",
     title:"Author",
@@ -9,7 +11,7 @@ export const author = defineType({
     fields: [
         defineField({
             name: "id",
-            type: "number",
+            type: "string",
             readOnly: true,
         }),
         defineField({
@@ -17,8 +19,22 @@ export const author = defineType({
             type: "string",
         }),
         defineField({
-            name: "username",
+            name: "email",
             type: "string",
+            validation: (Rule) => Rule.email().required(),
+        }),
+        defineField({
+            name: "username",
+            type: "slug",
+             validation: (Rule) => Rule.required().custom(async (slug, context) => {
+                const { document } = context;
+                if (!slug?.current) return true;
+                const existing = await client.fetch(
+                `*[_type == "author" && username.current == $username && _id != $id][0]`,
+                { username: slug.current, id: document?._id }
+                );
+                return existing ? "Username must be unique" : true;
+            }),
         }),
         defineField({
             name: "image",

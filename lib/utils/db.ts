@@ -1,7 +1,8 @@
 
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
 import {prisma} from "../prisma";
-import { verifyPassword, hashPassword } from "./password";
-import { createUserSchema, signUpSchema } from "@/lib/zod";
+import { verifyPassword} from "./password";
 import { UserResponse } from "@/types/userTypes";
 
 export const getUserFromDb = async (
@@ -35,6 +36,9 @@ export const getUserFromDb = async (
     // This changes the name of the password const since there is another one in the function scope
     const { password: userPassword, ...userWithoutPW } = user;
 
+    
+
+
     return {
       success: true,
       message: "User fetched successfully",
@@ -45,63 +49,27 @@ export const getUserFromDb = async (
   }
 };
 
-export const createUser = async (
-  name: string,
-  email: string,
-  password: string
+export const getAccountFromDb = async (
+  userId: string,
 ): Promise<UserResponse> => {
   "use server";
   try {
-    const existingUser = await prisma.user.findUnique({
+    const account = await prisma.account.findUnique({
       where: {
-        email,
+        userId,
       },
     });
 
-    if (existingUser) {
-      throw new Error("User with this email already exists");
+    if (!account) {
+      throw new Error("Account not found");
     }
-
-    const hashedPassword = await hashPassword(password);
-
-    const { error } = createUserSchema.safeParse({
-      name,
-      email,
-      password,
-    });
-
-    if (error) {
-      throw new Error(error.message);
-    }
-
-    const user = await prisma.user.create({
-      data: {
-        name,
-        email,
-        password: hashedPassword,
-      },
-    });
-
-    if (!user) {
-      throw new Error("Failed to create user");
-    }
-
-    // This changes the name of the password const since there is another one in the function scope
-    const { password: userPassword, ...userWithoutPw } = user;
 
     return {
       success: true,
-      message: "User created successfully",
-      user: userWithoutPw,
+      message: "Account fetched successfully",
+      user: account,
     };
-  } catch (error: unknown) {
-    return {
-      success: false,
-      message:
-        typeof error === "object" && error !== null && "message" in error
-          ? String((error as { message?: string }).message)
-          : "Failed to create user",
-      user: null,
-    };
+  } catch (error) {
+    return { success: false, message: "Failed to fetch account" };
   }
 };

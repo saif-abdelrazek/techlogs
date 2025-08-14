@@ -8,11 +8,6 @@ export const project = defineType({
     icon: UserIcon,
     fields: [
         defineField({
-            name: "id",
-            type: "number",
-            readOnly: true,
-        }),
-        defineField({
             name: "name",
             type: "string",
         }),
@@ -41,6 +36,17 @@ export const project = defineType({
             name: "image",
             type: "url",
             validation: (Rule) => Rule.required().uri({ scheme: ['http', 'https'] }),
+        }),
+        defineField({
+            name: "link",
+            type: "url",
+            validation: (Rule) => Rule.required().uri({ scheme: ['http', 'https'] }),
+        }),
+        defineField({
+            name: "repository",
+            type: "url",
+            validation: (Rule) => Rule.uri({ scheme: ['http', 'https'] }),
+            description: "Link to the project's repository (optional)",
         }),
         defineField({
             name: "category",
