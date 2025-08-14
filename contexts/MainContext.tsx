@@ -1,14 +1,9 @@
 "use client";
-import { ThemeProvider } from "next-themes";
 import { SessionProvider } from "next-auth/react";
 import { useState, useContext, createContext } from "react";
+import { ThemeProvider } from "./providers/theme-provider";
 
-const MainContext = createContext({
-  isAuthenticated: false,
-  user: null,
-  setIsAuthenticated: (value: boolean) => {},
-  setUser: (user: any) => {},
-});
+const MainContext = createContext({});
 
 export const useMainContext = () => {
   const context = useContext(MainContext);
@@ -24,23 +19,19 @@ export const MainProvider = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <SessionProvider>
-      <MainContext.Provider
-        value={{
-          isAuthenticated,
-          user,
-          setIsAuthenticated,
-          setUser,
-        }}
+      <ThemeProvider
+        attribute="class"
+        defaultTheme="system"
+        enableSystem
+        disableTransitionOnChange
       >
-        <ThemeProvider
-          attribute="class"
-          enableSystem={true}
-          disableTransitionOnChange={false}
-          storageKey="techlogs-theme"
+        <MainContext.Provider
+          value={{ isAuthenticated, user, setIsAuthenticated, setUser }}
         >
           {children}
-        </ThemeProvider>
-      </MainContext.Provider>
+        </MainContext.Provider>
+      </ThemeProvider>
     </SessionProvider>
   );
 };
+export default MainProvider;
