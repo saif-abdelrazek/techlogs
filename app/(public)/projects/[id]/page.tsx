@@ -14,7 +14,7 @@ if (typeof global !== "undefined" && typeof global.isSpace === "undefined") {
 
 import { Suspense } from "react";
 import { client } from "@/sanity/lib/client";
-import { PROJECT_BY_SLUG_QUERY, PLAYLIST_BY_SLUG_QUERY } from "@/sanity/lib/queries";
+import { PROJECT_BY_ID_QUERY, PLAYLIST_BY_ID_QUERY } from "@/sanity/lib/queries";
 import { notFound } from "next/navigation";
 import { formatDate } from "@/lib/utils/formatDate";
 import Link from "next/link";
@@ -27,14 +27,14 @@ const md = markdownit()
 
 export const experimental_ppr = true;
 
-const Page = async ({ params }: { params: { slug: string } }) => {
-  const slug = params.slug;
+const Page = async ({ params }: { params: { id: string } }) => {
+  const id = (await params).id;
 
   const [project, 
     // { select: editorPosts }
   ]   = await Promise.all([
-    client.fetch(PROJECT_BY_SLUG_QUERY, { slug }),
-    client.fetch(PLAYLIST_BY_SLUG_QUERY, { slug: "editor-picks-new" }),
+    client.fetch(PROJECT_BY_ID_QUERY, { id }),
+    client.fetch(PLAYLIST_BY_ID_QUERY, { id: "editor-picks-new" }),
   ]);
 
   if (!project) return notFound();
@@ -84,12 +84,7 @@ const Page = async ({ params }: { params: { slug: string } }) => {
                 height={64}
                 className="rounded-full drop-shadow-lg border-2 border-blue-200 dark:border-sky-800"
               />
-              <div>
-                <p className="text-lg font-semibold text-blue-900 dark:text-sky-100">{project.author?.name}</p>
-                {project.author?.username && (
-                  <p className="text-sm text-blue-700 dark:text-sky-200">@{project.author.username}</p>
-                )}
-              </div>
+
             </Link>
             <span className="inline-block bg-blue-100 text-blue-700 dark:bg-sky-900 dark:text-sky-200 px-4 py-2 rounded-full text-xs font-semibold shadow">
               {project.category}
