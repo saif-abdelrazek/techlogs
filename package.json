@@ -7,7 +7,7 @@
     "db:dev:down": "docker compose -f docker-compose.yml down techlogdb_dev",
     "dev": "next dev --turbopack",
     "first:dev": "npm run db:dev:up && next dev --turbopack",
-    "build": "prisma generate && prisma generate && next build",
+    "build": "prisma generate && prisma migrate deploy && next build",
     "start": "next start",
     "lint": "next lint",
     "typegen": "sanity schema extract --path=./sanity/extract.json && sanity typegen generate"
