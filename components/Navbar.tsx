@@ -1,10 +1,11 @@
 import Link from "next/link";
 import Image from "next/image";
-import { auth, signOut } from "@/lib/auth";
-import { BadgePlus, LogOut } from "lucide-react";
+import { auth } from "@/lib/auth";
+import { BadgePlus } from "lucide-react";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import ModeToggle from "@/components/ModeToggle";
 import { handleAvatarImage } from "@/lib/utils/generateAvatar";
+import SignoutBtn from "@/components/SignoutBtn";
 
 const Navbar = async () => {
   const session = await auth();
@@ -26,31 +27,27 @@ const Navbar = async () => {
           {session && session?.user ? (
             <>
               <Link
-                href="/new"
+                href="/create"
                 className="hover:bg-blue-100 dark:hover:bg-gray-800 px-3 py-2 rounded transition"
               >
                 <span className="max-sm:hidden">Create</span>
                 <BadgePlus className="size-6 sm:hidden" />
               </Link>
 
-              <form
-                action={async () => {
-                  "use server";
-                  await signOut({ redirectTo: "/" });
-                }}
-              >
-                <button
-                  type="submit"
-                  className="hover:bg-blue-100 dark:hover:bg-gray-800 px-3 py-2 rounded transition flex items-center"
-                >
-                  <span className="max-sm:hidden">Logout</span>
-                  <LogOut className="size-6 sm:hidden text-red-500" />
-                </button>
-              </form>
+              <SignoutBtn
+                className="hover:bg-red-100 dark:hover:bg-gray-800 px-3 py-2 rounded transition"
+              />
 
-              <Link href={`/user/${session?.user?.id || ""}`}>
+              <Link href={"/dashboard"}>
                 <Avatar className="size-10">
-                  <AvatarImage src={handleAvatarImage(session?.user ?? undefined)} alt={session?.user?.name || ""} />
+                  <AvatarImage 
+  src={session?.user ? handleAvatarImage({
+    ...session.user,
+    name: session.user.name ?? undefined,
+    image: session.user.image ?? undefined
+  }) : undefined} 
+  alt={session?.user?.name || ""} 
+/>
                 </Avatar>
               </Link>
             </>

@@ -5,9 +5,6 @@ import { PROJECTS_QUERY } from "@/sanity/lib/queries";
 import { ProjectCardType } from "@/types/projectTypes";
 import { sanityFetch, SanityLive } from "@/sanity/lib/live";
 
-
-
-
 const ProjectsPage = async ({
   searchParams,
 }: {  searchParams: Promise<{ query?: string }>;}) => {
