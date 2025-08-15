@@ -48,28 +48,3 @@ export const getUserFromDb = async (
     return { success: false, message: "Failed to fetch user" };
   }
 };
-
-export const getAccountFromDb = async (
-  userId: string,
-): Promise<UserResponse> => {
-  "use server";
-  try {
-    const account = await prisma.account.findUnique({
-      where: {
-        userId,
-      },
-    });
-
-    if (!account) {
-      throw new Error("Account not found");
-    }
-
-    return {
-      success: true,
-      message: "Account fetched successfully",
-      user: account,
-    };
-  } catch (error) {
-    return { success: false, message: "Failed to fetch account" };
-  }
-};
