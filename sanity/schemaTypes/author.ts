@@ -24,19 +24,6 @@ export const author = defineType({
             validation: (Rule) => Rule.email().required(),
         }),
         defineField({
-            name: "username",
-            type: "slug",
-             validation: (Rule) => Rule.required().custom(async (slug, context) => {
-                const { document } = context;
-                if (!slug?.current) return true;
-                const existing = await client.fetch(
-                `*[_type == "author" && username.current == $username && _id != $id][0]`,
-                { username: slug.current, id: document?._id }
-                );
-                return existing ? "Username must be unique" : true;
-            }),
-        }),
-        defineField({
             name: "image",
             type: "url"
         }),

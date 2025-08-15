@@ -7,7 +7,7 @@
     "db:dev:down": "docker compose -f docker-compose.yml down techlogdb_dev",
     "dev": "next dev --turbopack",
     "first:dev": "npm run db:dev:up && next dev --turbopack",
-    "build": "next build",
+    "build": "prisma generate && prisma generate && next build",
     "start": "next start",
     "lint": "next lint",
     "typegen": "sanity schema extract --path=./sanity/extract.json && sanity typegen generate"
@@ -52,6 +52,7 @@
     "tailwind-merge": "^3.3.1",
     "tailwindcss-animate": "^1.0.7",
     "uuid": "^11.1.0",
+    "vercel": "^45.0.9",
     "zod": "^3.25.67"
   },
   "devDependencies": {

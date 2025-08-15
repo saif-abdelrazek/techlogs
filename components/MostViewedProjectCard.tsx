@@ -7,11 +7,12 @@ function MostViewedProjectCard({
   project,
   index,
 }: {project: ProjectCardType, index: number }) {
-  const {  name,
+  const { 
+  _id,
+  name,
   description,
   category,
   views,
-  slug,
   image,
   _createdAt: createdAt,
   author,
@@ -95,7 +96,7 @@ function MostViewedProjectCard({
 
       {/* Link Overlay */}
       <Link
-        href={`/projects/${slug?.current}`}
+        href={`/projects/${_id}`}
         className="absolute inset-0 z-10"
         aria-label={`Read more about ${name}`}
       />

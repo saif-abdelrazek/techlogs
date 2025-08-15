@@ -46,10 +46,10 @@ export type Project = {
   };
   views?: number;
   description?: string;
+  category?: string;
   image?: string;
   link?: string;
   repository?: string;
-  category?: string;
   pitch?: string;
 };
 
@@ -62,7 +62,6 @@ export type Author = {
   id?: string;
   name?: string;
   email?: string;
-  username?: Slug;
   image?: string;
   bio?: string;
 };
@@ -266,7 +265,7 @@ export type PROJECT_BY_SLUG_QUERYResult = {
   author: {
     id: string | null;
     name: string | null;
-    username: Slug | null;
+    username: null;
     image: string | null;
     bio: string | null;
   } | null;
@@ -289,7 +288,7 @@ export type AUTHOR_BY_ID_QUERYResult = {
   _id: string;
   id: string | null;
   name: string | null;
-  username: Slug | null;
+  username: null;
   email: string | null;
   image: string | null;
   bio: string | null;
@@ -340,16 +339,4 @@ export type PLAYLIST_BY_SLUG_QUERYResult = {
   }> | null;
 } | null;
 
-// Query TypeMap
-import "@sanity/client";
-declare module "@sanity/client" {
-  interface SanityQueries {
-    "*[_type == \"project\" && defined(slug.current) && !defined($search) || name match $search || category match $search || author->name match $search] | order(_createdAt desc) {\n  _id, \n  name, \n  slug,\n  _createdAt,\n  author -> {\n    _id, name, image, bio\n\n  }, \n  views,\n  description,\n  category,\n  image,\n}": PROJECTS_QUERYResult;
-    "*[_type == \"project\"] | order(views desc) [0...3] {\n  _id,\n  id,\n  name,\n  slug,\n  author-> {\n    name,\n    image\n  },\n  views,\n  description,\n  image,\n  category,\n  pitch\n}": MOST_VIEWED_PROJECTS_QUERYResult;
-    "*[_type == \"project\" && slug.current == $slug][0]{\n  _id,\n  id, \n  name, \n  slug, \n  _createdAt,\n  author -> {\n    id, name, username, image, bio\n  }, \nviews,\n  description,\n  category,\n  image,\n  pitch,\n}": PROJECT_BY_SLUG_QUERYResult;
-    "\n    *[_type == \"project\" && id == $id][0]{\n      _id,\n        id, views\n    }\n": PROJECT_VIEWS_QUERYResult;
-    "\n*[_type == \"author\" && id == $id][0]{\n    _id,\n    id,\n    name,\n    username,\n    email,\n    image,\n    bio\n}\n": AUTHOR_BY_ID_QUERYResult;
-    "*[_type == \"project\" && author._ref == $id] | order(_createdAt desc) {\n  _id,\n  id, \n  name, \n  slug,\n  _createdAt,\n  author -> {\n    id, name, image, bio\n  }, \n  views,\n  description,\n  category,\n  image,\n}": PROJECTS_BY_AUTHOR_QUERYResult;
-    "*[_type == \"playlist\" && slug.current == $slug][0]{\n  _id,\n  id,\n  name,\n  slug,\n  select[]->{\n    id,\n    _createdAt,\n    name,\n    slug,\n    author->{\n      id,\n      name,\n      slug,\n      image,\n      bio\n    },\n    views,\n    description,\n    category,\n    image,\n    pitch\n  }\n}": PLAYLIST_BY_SLUG_QUERYResult;
-  }
-}
+
