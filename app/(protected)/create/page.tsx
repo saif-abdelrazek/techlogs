@@ -9,6 +9,19 @@ const Page = async () => {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <div className="container mx-auto px-4 py-8">
+        {/* Back to Home Button */}
+        <div className="mb-6">
+          <Link
+            href="/"
+            className="inline-flex items-center space-x-2 text-gray-600 dark:text-gray-400 hover:text-primary-blue transition-colors duration-200"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+            <span>Back to Home</span>
+          </Link>
+        </div>
+
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           {/* Left Sidebar - User Info (matching dashboard) */}
           <div className="lg:col-span-1">
@@ -35,6 +48,16 @@ const Page = async () => {
 
                 {/* Navigation */}
                 <div className="space-y-2">
+                  {/* Home Button */}
+                  <Link
+                    href="/"
+                    className="w-full flex items-center justify-center space-x-2 border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 font-medium py-2 px-4 rounded-lg transition-colors duration-200"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                    </svg>
+                    <span>Home</span>
+                  </Link>
                   <Link
                     href="/dashboard"
                     className="w-full border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 font-medium py-2 px-4 rounded-lg transition-colors duration-200 block text-center"
@@ -59,6 +82,7 @@ const Page = async () => {
                     <li>• Add high-quality images</li>
                     <li>• Include live demo links</li>
                     <li>• Write engaging descriptions</li>
+                    <li>• Use markdown for rich formatting</li>
                   </ul>
                 </div>
               </div>
@@ -90,6 +114,33 @@ const Page = async () => {
 
               <div className="p-6">
                 <ProjectForm />
+              </div>
+            </div>
+
+            {/* Markdown Guide Section */}
+            <div className="mt-6 bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+                📝 Markdown Guide
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <h4 className="font-medium text-gray-900 dark:text-white mb-2">Basic Formatting</h4>
+                  <div className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
+                    <p><code className="bg-gray-100 dark:bg-gray-700 px-1 rounded">**bold text**</code></p>
+                    <p><code className="bg-gray-100 dark:bg-gray-700 px-1 rounded">*italic text*</code></p>
+                    <p><code className="bg-gray-100 dark:bg-gray-700 px-1 rounded"># Heading 1</code></p>
+                    <p><code className="bg-gray-100 dark:bg-gray-700 px-1 rounded">## Heading 2</code></p>
+                  </div>
+                </div>
+                <div>
+                  <h4 className="font-medium text-gray-900 dark:text-white mb-2">Advanced Features</h4>
+                  <div className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
+                    <p><code className="bg-gray-100 dark:bg-gray-700 px-1 rounded">[link text](URL)</code></p>
+                    <p><code className="bg-gray-100 dark:bg-gray-700 px-1 rounded">- List item</code></p>
+                    <p><code className="bg-gray-100 dark:bg-gray-700 px-1 rounded">`code snippet`</code></p>
+                    <p><code className="bg-gray-100 dark:bg-gray-700 px-1 rounded">&gt; Quote text</code></p>
+                  </div>
+                </div>
               </div>
             </div>
 

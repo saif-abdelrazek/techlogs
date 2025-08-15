@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
-import { auth, signOut } from "@/lib/auth";
-import { BadgePlus, LogOut } from "lucide-react";
+import { auth } from "@/lib/auth";
+import { BadgePlus } from "lucide-react";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import ModeToggle from "@/components/ModeToggle";
 import { handleAvatarImage } from "@/lib/utils/generateAvatar";
@@ -40,7 +40,14 @@ const Navbar = async () => {
 
               <Link href={"/dashboard"}>
                 <Avatar className="size-10">
-                  <AvatarImage src={handleAvatarImage(session?.user ?? undefined)} alt={session?.user?.name || ""} />
+                  <AvatarImage 
+  src={session?.user ? handleAvatarImage({
+    ...session.user,
+    name: session.user.name ?? undefined,
+    image: session.user.image ?? undefined
+  }) : undefined} 
+  alt={session?.user?.name || ""} 
+/>
                 </Avatar>
               </Link>
             </>

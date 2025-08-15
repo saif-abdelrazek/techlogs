@@ -3,7 +3,6 @@ import React from "react";
 import { redirect } from "next/navigation";
 import Loader from "@/components/Loader";
 import { auth } from "@/lib/auth";
-import { signOut } from "@/lib/auth";
 
 export default async function Layout({
   children,

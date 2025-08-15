@@ -16,7 +16,6 @@ const ProjectCard = ({ post }: { post: ProjectCardType }) => {
     _id,
     _createdAt,
     views,
-    slug,
     author,
     name,
     category,
@@ -31,7 +30,7 @@ const ProjectCard = ({ post }: { post: ProjectCardType }) => {
         "flex flex-col bg-white dark:bg-[#1e293b] border border-blue-200 dark:border-sky-800 rounded-2xl shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden group"
       )}
     >
-      <Link href={`/projects/${slug?.current}`} className="block">
+      <Link href={`/projects/${_id}`} className="block">
         <div className="relative aspect-[4/3] bg-blue-100 dark:bg-sky-900 overflow-hidden transition-transform duration-300 group-hover:scale-105">
           {image ? (
             <Image
@@ -50,7 +49,7 @@ const ProjectCard = ({ post }: { post: ProjectCardType }) => {
       <div className="flex flex-col flex-1 p-5 gap-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Link href={`/user/${author?.id}`}>
+            <Link href={`/authors/${author?.id}`}>
               {author?.image ? (
                 <Avatar className="size-10">
                   <AvatarImage
@@ -58,20 +57,20 @@ const ProjectCard = ({ post }: { post: ProjectCardType }) => {
                     alt={author?.name || ""}
                   />
                   <AvatarFallback>
-                    {handleAvatarImage(author?.name ?? undefined)}
+                    {handleAvatarImage(author ?? undefined)}
                   </AvatarFallback>
                 </Avatar>
               ) : (
                 <div className="w-9 h-9 rounded-full bg-blue-200 dark:bg-sky-800 flex items-center justify-center">
                   <span className="text-base font-medium text-blue-700 dark:text-sky-200">
-                    {handleAvatarImage(author?.name)}
+                    {handleAvatarImage(author)}
                   </span>
                 </div>
               )}
             </Link>
             <div className ="flex flex-col text-start">
               <span className="left-0 block text-sm font-semibold text-blue-700 dark:text-sky-200">Author</span>
-              <Link href={`/user/${author?.id}`}>
+              <Link href={`/authors/${author?.id}`}>
               <span className="text-sm text-blue-900 dark:text-sky-100">{author?.name}</span>
               </Link>
             </div>
@@ -81,7 +80,7 @@ const ProjectCard = ({ post }: { post: ProjectCardType }) => {
             <span className="text-sm text-blue-700 dark:text-sky-200">{views ? views : 0}</span>
           </div>
         </div>
-        <Link href={`/projects/${slug?.current}`}>
+        <Link href={`/projects/${_id}`}>
           <h3 className="font-bold text-start text-lg text-blue-900 dark:text-sky-100 mb-1 line-clamp-1">{name}</h3>
         </Link>
         <p className="text-sm text-start text-blue-800 dark:text-sky-200 line-clamp-2">{description}</p>
@@ -97,7 +96,7 @@ const ProjectCard = ({ post }: { post: ProjectCardType }) => {
           className="rounded-full bg-blue-700 hover:bg-blue-800 dark:bg-sky-700 dark:hover:bg-sky-600 font-medium text-[15px] text-white px-4 py-2 border-none transition mt-3"
           asChild
         >
-          <Link href={`/projects/${slug?.current}`}>Details</Link>
+          <Link href={`/projects/${_id}`}>Details</Link>
         </Button>
       </div>
     </li>

@@ -6,6 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { formatDate } from "@/lib/utils/formatDate";
 import SignoutBtn from "@/components/SignoutBtn";
+import DeleteProjectButton from "@/components/DeleteProjectButton";
 
 async function DashboardPage() {
   const session = await auth();
@@ -25,8 +26,7 @@ async function DashboardPage() {
     );
   }
 
-
-    // Check if user has an author profile
+  // Check if user has an author profile
   const authorProfile = await client.fetch(AUTHOR_BY_ID_QUERY, {
     id: session.user.id,
   });
@@ -36,27 +36,27 @@ async function DashboardPage() {
     id: session.user.id,
   }) : [];
 
-
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <div className="container mx-auto px-4 py-8">
-                {!authorProfile && (
-          <div className="mb-6 p-4 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg">
+        {!authorProfile && (
+          <div className="mb-6 p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
             <div className="flex items-center">
-              <svg className="w-5 h-5 text-yellow-600 dark:text-yellow-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-5 h-5 text-blue-600 dark:text-blue-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
               </svg>
               <div>
-                <h3 className="text-sm font-medium text-yellow-800 dark:text-yellow-200">
+                <h3 className="text-sm font-medium text-blue-800 dark:text-blue-200">
                   Author Profile Not Found
                 </h3>
-                <p className="text-sm text-yellow-700 dark:text-yellow-300 mt-1">
+                <p className="text-sm text-blue-700 dark:text-blue-300 mt-1">
                   Your author profile is being set up. Please try refreshing the page in a moment.
                 </p>
               </div>
             </div>
           </div>
         )}
+        
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           {/* Left Sidebar - User Info */}
           <div className="lg:col-span-1">
@@ -68,7 +68,7 @@ async function DashboardPage() {
                     src={session.user.image || "/default-avatar.png"}
                     alt={session.user.name || "User Avatar"}
                     fill
-                    className="rounded-full object-cover border-4 border-primary-blue/20"
+                    className="rounded-full object-cover border-4 border-blue-200 dark:border-blue-800"
                   />
                 </div>
 
@@ -84,7 +84,7 @@ async function DashboardPage() {
                 {/* Stats */}
                 <div className="grid grid-cols-2 gap-4 mb-6">
                   <div className="text-center">
-                    <div className="text-2xl font-bold text-primary-blue">
+                    <div className="text-2xl font-bold text-blue-600">
                       {userProjects?.length || 0}
                     </div>
                     <div className="text-xs text-gray-600 dark:text-gray-400">
@@ -92,8 +92,8 @@ async function DashboardPage() {
                     </div>
                   </div>
                   <div className="text-center">
-                    <div className="text-2xl font-bold text-green-600">
-                        {userProjects?.reduce((total: number, project: any) => total + (project.views || 0), 0) || 0}
+                    <div className="text-2xl font-bold text-blue-600">
+                        {userProjects?.reduce((total: number, project: { views: number }) => total + (project.views || 0), 0) || 0}
                     </div>
                     <div className="text-xs text-gray-600 dark:text-gray-400">
                       Total Views
@@ -105,7 +105,7 @@ async function DashboardPage() {
                 <div className="space-y-2">
                   <Link
                     href="/create"
-                    className="w-full bg-primary-blue hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 block text-center"
+                    className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 block text-center"
                   >
                     Create Project
                   </Link>
@@ -141,7 +141,6 @@ async function DashboardPage() {
                 </p>
               </div>
               
-              {/* Alternative: Sign out button in header for mobile */}
               <div className="lg:hidden">
                 <SignoutBtn variant="ghost" size="sm" />
               </div>
@@ -156,7 +155,7 @@ async function DashboardPage() {
                   </h2>
                   <Link
                     href="/create"
-                    className="bg-primary-blue hover:bg-blue-700 text-white text-sm font-medium py-2 px-4 rounded-lg transition-colors duration-200"
+                    className="bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium py-2 px-4 rounded-lg transition-colors duration-200"
                   >
                     + New Project
                   </Link>
@@ -166,7 +165,7 @@ async function DashboardPage() {
               <div className="p-6">
                 {userProjects && userProjects.length > 0 ? (
                   <div className="space-y-4">
-                    {userProjects.map((project: any) => (
+                    {userProjects.map((project: { _id: string; image: string; title: string; name: string; description: string; category: string; _createdAt: string; views: number }) => (
                       <div
                         key={project._id}
                         className="flex items-center space-x-4 p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200"
@@ -184,8 +183,8 @@ async function DashboardPage() {
                         {/* Project Info */}
                         <div className="flex-1 min-w-0">
                           <Link
-                            href={`/project/${project.slug?.current}`}
-                            className="text-lg font-semibold text-gray-900 dark:text-white hover:text-primary-blue transition-colors duration-200 block truncate"
+                            href={`/projects/${project._id}`}
+                            className="text-lg font-semibold text-gray-900 dark:text-white hover:text-blue-600 transition-colors duration-200 block truncate"
                           >
                             {project.title || project.name}
                           </Link>
@@ -196,27 +195,31 @@ async function DashboardPage() {
                             <span className="text-xs text-gray-500 dark:text-gray-400">
                               {formatDate(project._createdAt)}
                             </span>
-                            <span className="text-xs bg-primary-blue/10 text-primary-blue px-2 py-1 rounded-full">
+                            <span className="text-xs bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 px-2 py-1 rounded-full">
                               {project.category}
                             </span>
                           </div>
                         </div>
 
-                        {/* Project Stats */}
-                        <div className="flex items-center space-x-4 text-sm text-gray-600 dark:text-gray-400">
-                          <div className="flex items-center space-x-1">
+                        {/* Project Stats and Actions */}
+                        <div className="flex items-center space-x-4 text-sm">
+                          <div className="flex items-center space-x-1 text-gray-600 dark:text-gray-400">
                             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                             </svg>
                             <span>{project.views || 0}</span>
                           </div>
-                          <Link
-                            href={`/project/${project.slug?.current}/edit`}
-                            className="text-primary-blue hover:text-blue-700 transition-colors duration-200"
-                          >
-                            Edit
-                          </Link>
+                          
+                          <div className="flex items-center space-x-2">
+                            <Link
+                              href={`/edit/${project._id}`}
+                              className="text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 font-medium transition-colors duration-200"
+                            >
+                              Edit
+                            </Link>
+                            <DeleteProjectButton projectId={project._id} projectName={project.name} />
+                          </div>
                         </div>
                       </div>
                     ))}
@@ -236,7 +239,7 @@ async function DashboardPage() {
                     </p>
                     <Link
                       href="/create"
-                      className="inline-block bg-primary-blue hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200"
+                      className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200"
                     >
                       Create Your First Project
                     </Link>
