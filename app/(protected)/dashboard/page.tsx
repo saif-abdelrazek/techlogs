@@ -110,12 +110,17 @@ async function DashboardPage() {
                     Create Project
                   </Link>
                   <Link
-                    href="/profile"
+                    href="/projects"
                     className="w-full border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 font-medium py-2 px-4 rounded-lg transition-colors duration-200 block text-center"
                   >
-                    Edit Profile
+                    View All Projects
                   </Link>
-                  
+                  <Link
+                    href="/"
+                    className="w-full border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 font-medium py-2 px-4 rounded-lg transition-colors duration-200 block text-center"
+                  >
+                    Go Home
+                  </Link>
                   {/* Sign Out Button */}
                   <div className="pt-4 border-t border-gray-200 dark:border-gray-600">
                     <SignoutBtn 
