@@ -33,22 +33,22 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       if (!user || !account) return false;
       
       try {
-        const authorData = profile || user;
-        
+        const authorId = user.id;
+
         const existingUser = await client.withConfig({ useCdn: false }).fetch(
           AUTHOR_BY_ID_QUERY,
-          { id: authorData?.id || user.id }
+          { id: authorId }
         );
         
         if (!existingUser) {
           await writeClient.create({
             _type: "author",
-            id: authorData?.id || user.id,
-            name: authorData?.name || user.name || "Unknown",
-            email: authorData?.email || user.email || "",
-            username: authorData?.username || authorData?.login || "",
-            image: authorData?.image || user.image || "",
-            bio: authorData?.bio || "",
+            id:  user.id,
+            name: user.name || "Unknown",
+            email: user.email || "",
+            username: user.username || user.login || "",
+            image: user.image || "",
+            bio: user.bio || "",
           });
         }
         
