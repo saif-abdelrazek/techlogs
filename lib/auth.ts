@@ -29,7 +29,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     signIn: "/login",
   },
   callbacks: {
-    async signIn({ user, account, profile }: { user: any; account?: any; profile?: any }) {
+    async signIn({ user, account }: { user: any; account?: any;}) {
       if (!user || !account) return false;
       
       try {
