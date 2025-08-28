@@ -7,8 +7,11 @@ import { parseServerActionResponse } from "@/lib/utils/parseServerActionResponse
 import { client } from "@/sanity/lib/client";
 import { AUTHOR_BY_ID_QUERY } from "@/sanity/lib/queries";
 
+
 export const createPitch = async (
-form: FormData, formDataFromForm: FormData, pitch: string,
+  prevState: any, 
+  formData: FormData, 
+  pitch: string,
 ) => {
   const session = await auth();
 
@@ -20,15 +23,31 @@ form: FormData, formDataFromForm: FormData, pitch: string,
   }
 
   try {
-    // Get form fields
-    const formData = Object.fromEntries(
-      Array.from(form).filter(([key]) => key !== "pitch")
-    );
-    
-    const { name, description, category, image, link, repository } = formData;
+    // Get form fields directly from formData
+    const formDataObject = {
+      name: String(formData.get("name") || "").trim(),
+      description: String(formData.get("description") || "").trim(),
+      category: String(formData.get("category") || "").trim(),
+      image: String(formData.get("image") || "").trim(),
+      link: String(formData.get("link") || "").trim(),
+      repository: formData.get("repository") ? String(formData.get("repository")).trim() : "",
+    };
+
+    const { name, description, category, image, link, repository } = formDataObject;
+
+    // Validate required fields
+    if (!name || !description || !category || !image || !link) {
+      console.error("Missing required fields:", { name, description, category, image, link });
+      return parseServerActionResponse({
+        error: "All required fields must be filled",
+        status: "ERROR",
+      });
+    }
+
+    console.log("Creating project with data:", { name, description, category, image, link, repository });
 
     // Create safe slug
-    const slug = slugify(name as string, { 
+    const slug = slugify(name, { 
       lower: true, 
       strict: true,
       remove: /[*+~.()'"!:@]/g
@@ -54,12 +73,12 @@ form: FormData, formDataFromForm: FormData, pitch: string,
     // Create project
     const project = {
       _type: "project",
-      name: String(name).trim(),
-      description: String(description).trim(),
-      category: String(category).trim(),
-      image: String(image).trim(),
-      link: String(link).trim(),
-      repository: repository ? String(repository).trim() : "",
+      name: name,
+      description: description,
+      category: category,
+      image: image,
+      link: link,
+      repository: repository || "",
       slug: {
         _type: "slug",
         current: slug,
