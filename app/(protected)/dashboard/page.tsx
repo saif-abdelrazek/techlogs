@@ -145,10 +145,6 @@ async function DashboardPage() {
                   Manage your projects and track their performance
                 </p>
               </div>
-              
-              <div className="lg:hidden">
-                <SignoutBtn variant="ghost" size="sm" />
-              </div>
             </div>
 
             {/* Projects Section */}

@@ -23,7 +23,7 @@ const Page = async ({ params }: { params: Promise<{ id: string }> }) => {
   }
 
   // Check if user owns this project - FIXED: Use _id instead of id
-  if (project.author._id !== session.user.id) {
+  if (project.author.id !== session.user.id) {
     return (
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
         <div className="text-center">
@@ -89,7 +89,7 @@ const Page = async ({ params }: { params: Promise<{ id: string }> }) => {
                     Dashboard
                   </Link>
                   <Link
-                    href={`/projects/${project.slug?.current || project._id}`}
+                    href={`/projects/${project._id}`}
                     className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 block text-center"
                   >
                     View Project

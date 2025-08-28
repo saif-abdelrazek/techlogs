@@ -1,6 +1,5 @@
 // Extend the global type to include isSpace
 declare global {
-  // eslint-disable-next-line no-var
   var isSpace: ((code: number) => boolean) | undefined;
 }
 
@@ -50,8 +49,8 @@ const Page = async ({ params }: PageProps) => {
 
   if (!project) return notFound();
 
-  // Check if current user is the author - FIXED: Use _id instead of id
-  const isAuthor = session?.user?.id === project.author?._id;
+  // Check if current user is the author
+  const isAuthor = session?.user?.id === project.author?.id;
 
   // Properly render markdown content
   const renderedHTML = project?.pitch && project.pitch.trim() !== "" 
@@ -93,7 +92,7 @@ const Page = async ({ params }: PageProps) => {
             {/* Author Section */}
             <div className="flex items-center justify-between w-full">
               <Link
-                href={`/authors/${project.author?._id || project.author?.id}`}
+                href={`/authors/${project.author?.id}`}
                 className="flex gap-3 items-center mb-3 hover:opacity-80 transition-opacity duration-200"
               >
                 <Image

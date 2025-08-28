@@ -1,13 +1,13 @@
 "use client";
 
-import React, { useState, useActionState, useEffect } from "react";
+import React, { useState, useActionState, useEffect, useCallback, useRef } from "react";
 
 import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import MDEditor from "@uiw/react-md-editor";
 import { Button } from "@/components/ui/button";
-import { Send, Save } from "lucide-react";
+import { Send, Save, Cloud, CloudOff } from "lucide-react";
 import { newProjectSchema } from "@/lib/zod";
 import { z } from "zod";
 import { toast } from "sonner";
@@ -35,9 +35,123 @@ const ProjectForm = ({ initialData, isEditing = false }: ProjectFormProps) => {
 
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [pitch, setPitch] = useState(initialData?.pitch || "");
+  const [autoSaveStatus, setAutoSaveStatus] = useState<'saved' | 'saving' | 'restored' | null>(null);
+  const [isDataRestored, setIsDataRestored] = useState(false);
+  
+  // Auto-save configuration
+  const AUTO_SAVE_KEY = isEditing ? `project-edit-${initialData?._id}` : 'project-create-draft';
+  const AUTO_SAVE_DELAY = 1000; // 1 second delay
+  const autoSaveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Load saved data from localStorage on component mount (only for creating, not editing)
+  useEffect(() => {
+    // Skip auto-save restore for editing mode
+    if (isEditing) return;
+    
+    try {
+      const savedData = localStorage.getItem(AUTO_SAVE_KEY);
+      if (savedData) {
+        const parsedData = JSON.parse(savedData);
+        
+        // For creating, restore if there's saved data
+        setFormData(parsedData.formData);
+        setPitch(parsedData.pitch || "");
+        setAutoSaveStatus('restored');
+        setIsDataRestored(true);
+        
+        console.log('Restored from localStorage:', parsedData);
+        
+        // Show restoration message
+        setTimeout(() => {
+          setAutoSaveStatus('saved');
+        }, 3000);
+      }
+    } catch (error) {
+      console.error('Failed to restore auto-saved data:', error);
+      localStorage.removeItem(AUTO_SAVE_KEY);
+    }
+  }, [AUTO_SAVE_KEY, isEditing]);
+
+  // Auto-save function with debouncing
+  const autoSave = useCallback(() => {
+    if (autoSaveTimeoutRef.current) {
+      clearTimeout(autoSaveTimeoutRef.current);
+    }
+
+    autoSaveTimeoutRef.current = setTimeout(() => {
+      try {
+        const dataToSave = {
+          formData,
+          pitch,
+          timestamp: Date.now()
+        };
+        
+        localStorage.setItem(AUTO_SAVE_KEY, JSON.stringify(dataToSave));
+        setAutoSaveStatus('saved');
+        
+        // Hide status after 2 seconds
+        setTimeout(() => {
+          setAutoSaveStatus(null);
+        }, 2000);
+      } catch (error) {
+        console.error('Failed to auto-save data:', error);
+        setAutoSaveStatus(null);
+      }
+    }, AUTO_SAVE_DELAY);
+
+    setAutoSaveStatus('saving');
+  }, [formData, pitch, AUTO_SAVE_KEY]);
+
+  // Trigger auto-save when form data changes (only for creating, not editing)
+  useEffect(() => {
+    // Skip auto-save for editing mode
+    if (isEditing) return;
+    
+    const hasData = formData.name || formData.description || formData.category || 
+                   formData.image || formData.link || formData.repository || pitch;
+    
+    if (hasData) {
+      autoSave();
+    }
+  }, [formData, pitch, autoSave, isEditing]);
+
+  // Clear auto-save data
+  const clearAutoSaveData = useCallback(() => {
+    try {
+      localStorage.removeItem(AUTO_SAVE_KEY);
+      setAutoSaveStatus(null);
+      setIsDataRestored(false);
+      
+      // Reset to initial data if editing
+      if (isEditing && initialData) {
+        setFormData({
+          name: initialData.name || "",
+          description: initialData.description || "",
+          category: initialData.category || "",
+          image: initialData.image || "",
+          link: initialData.link || "",
+          repository: initialData.repository || "",
+        });
+        setPitch(initialData.pitch || "");
+      }
+    } catch (error) {
+      console.error('Failed to clear auto-saved data:', error);
+    }
+  }, [AUTO_SAVE_KEY, isEditing, initialData]);
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (autoSaveTimeoutRef.current) {
+        clearTimeout(autoSaveTimeoutRef.current);
+      }
+    };
+  }, []);
 
   useEffect(() => {
-    if (initialData) {
+    // Only set initial data if we haven't restored from localStorage
+    if (initialData && !isDataRestored) {
+      console.log('Setting initial data for editing:', initialData.name);
       setFormData({
         name: initialData.name || "",
         description: initialData.description || "",
@@ -47,8 +161,10 @@ const ProjectForm = ({ initialData, isEditing = false }: ProjectFormProps) => {
         repository: initialData.repository || "",
       });
       setPitch(initialData.pitch || "");
+    } else if (isDataRestored) {
+      console.log('Skipping initial data because localStorage data was restored');
     }
-  }, [initialData]);
+  }, [initialData, isDataRestored]);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleFormSubmit = async (prevState: any, formDataFromForm: FormData) => {
@@ -82,6 +198,9 @@ const ProjectForm = ({ initialData, isEditing = false }: ProjectFormProps) => {
       }
 
       if (result.status === "SUCCESS") {
+        // Clear auto-saved data on successful submission
+        clearAutoSaveData();
+        
         toast.success(
           isEditing 
             ? "Your project has been updated successfully!" 
@@ -99,10 +218,13 @@ const ProjectForm = ({ initialData, isEditing = false }: ProjectFormProps) => {
             repository: "",
           });
           setPitch("");
+        } else {
+          // For editing, clear the auto-saved changes
+          clearAutoSaveData();
         }
         
         // Navigate to the project page
-        const projectId = result.id || initialData?._id;
+        const projectId = result._id || initialData?._id;
         router.push(`/projects/${projectId}`);
         return result;
 
@@ -147,10 +269,10 @@ const ProjectForm = ({ initialData, isEditing = false }: ProjectFormProps) => {
   });
 
   useEffect(() => {
-    if (status === "unauthenticated") {
+    if (state.status === "unauthenticated") {
       router.replace("/login");
     }
-  }, [router]);
+  }, [router, state.status]);
 
   // Helper function
   const handleInputChange = (field: string, value: string) => {
@@ -163,7 +285,7 @@ const ProjectForm = ({ initialData, isEditing = false }: ProjectFormProps) => {
   // Cancel editing handler
   const handleCancel = () => {
     if (isEditing) {
-      router.push(`/projects/${initialData?.slug?.current || initialData?._id}`);
+      router.push(`/projects/${initialData?._id}`);
     } else {
       router.push("/dashboard");
     }
@@ -191,12 +313,14 @@ const ProjectForm = ({ initialData, isEditing = false }: ProjectFormProps) => {
         repository: "",
       });
       setPitch("");
+      // Clear auto-saved data when resetting form
+      clearAutoSaveData();
     }
     setErrors({});
-    toast.success("Form reset successfully");
+    toast.success(isEditing ? "Form reset to original values" : "Form reset successfully");
   };
 
-  if (status === "loading") {
+  if (state.status === "loading") {
     return (
       <div className="flex items-center justify-center py-8">
         <div className="w-8 h-8 border-2 border-primary-blue border-t-transparent rounded-full animate-spin"></div>
@@ -206,6 +330,45 @@ const ProjectForm = ({ initialData, isEditing = false }: ProjectFormProps) => {
 
   return (
     <div>
+      {/* Auto-save Status Indicator - Only show for creating, not editing */}
+      {!isEditing && (
+        <div className={`mb-4 p-3 rounded-lg border flex items-center space-x-2 transition-all duration-200 ${
+          autoSaveStatus ? (
+            autoSaveStatus === 'restored' 
+              ? 'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800 opacity-100' 
+              : autoSaveStatus === 'saving'
+              ? 'bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800 opacity-100'
+              : 'bg-gray-50 dark:bg-gray-900/20 border-gray-200 dark:border-gray-800 opacity-100'
+          ) : 'bg-gray-50 dark:bg-gray-900/20 border-gray-200 dark:border-gray-800 opacity-40'
+        }`}>
+          <div className="flex items-center space-x-2">
+            {autoSaveStatus === 'saving' ? (
+              <div className="w-4 h-4 border-2 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+            ) : autoSaveStatus === 'restored' ? (
+              <Cloud className="w-4 h-4 text-green-600 dark:text-green-400" />
+            ) : autoSaveStatus === 'saved' ? (
+              <Cloud className="w-4 h-4 text-gray-600 dark:text-gray-400" />
+            ) : (
+              <Cloud className="w-4 h-4 text-gray-400 dark:text-gray-500" />
+            )}
+            <span className={`text-sm ${
+              autoSaveStatus === 'restored' 
+                ? 'text-green-700 dark:text-green-300' 
+                : autoSaveStatus === 'saving'
+                ? 'text-blue-700 dark:text-blue-300'
+                : autoSaveStatus === 'saved'
+                ? 'text-gray-700 dark:text-gray-300'
+                : 'text-gray-500 dark:text-gray-400'
+            }`}>
+              {autoSaveStatus === 'restored' && 'Draft restored from previous session'}
+              {autoSaveStatus === 'saving' && 'Saving draft...'}
+              {autoSaveStatus === 'saved' && 'Draft saved automatically'}
+              {!autoSaveStatus && 'Auto-save ready - start typing to save your progress'}
+            </span>
+          </div>
+        </div>
+      )}
+
       {/* Form Header */}
       {isEditing && (
         <div className="mb-6 p-4 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg">
@@ -390,6 +553,23 @@ const ProjectForm = ({ initialData, isEditing = false }: ProjectFormProps) => {
 
           {/* Secondary Actions */}
           <div className="flex gap-3">
+            {/* Clear Draft Button (only for creating projects with saved data) */}
+            {!isEditing && autoSaveStatus && (
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => {
+                  clearAutoSaveData();
+                  toast.success("Draft cleared");
+                }}
+                className="px-4 py-3 border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 font-medium rounded-lg transition-colors duration-200 flex items-center gap-2"
+                disabled={isPending}
+              >
+                <CloudOff className="w-4 h-4" />
+                Clear Draft
+              </Button>
+            )}
+
             {/* Reset Button */}
             <Button
               type="button"
@@ -429,6 +609,7 @@ const ProjectForm = ({ initialData, isEditing = false }: ProjectFormProps) => {
             💡 Tips for a Great Project Submission
           </h3>
           <ul className="text-xs text-blue-700 dark:text-blue-300 space-y-1">
+            <li>• Your form data is automatically saved as you type - no need to worry about losing your progress!</li>
             <li>• Use a descriptive and memorable project name</li>
             <li>• Write a clear, concise description that highlights key features</li>
             <li>• Choose an appropriate category for better discoverability</li>

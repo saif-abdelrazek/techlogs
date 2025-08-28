@@ -24,6 +24,26 @@ const Page = async ({ params }: { params: Promise<{ id: string }> }) => {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <div className="container mx-auto px-4 py-8">
+        {/* Own Profile Badge */}
+        {isOwnProfile && (
+          <div className="mb-6 p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
+            <div className="flex items-center space-x-2">
+              <svg className="w-5 h-5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+              </svg>
+              <div>
+                <h3 className="text-sm font-medium text-blue-900 dark:text-blue-100">
+                  Preview Mode
+                </h3>
+                <p className="text-xs text-blue-700 dark:text-blue-300">
+                  This is how others see your profile. To manage your projects, visit your <Link href="/dashboard" className="underline hover:text-blue-600">dashboard</Link>.
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Back to Home Button */}
         <div className="mb-6">
           <Link
@@ -56,12 +76,6 @@ const Page = async ({ params }: { params: Promise<{ id: string }> }) => {
                 <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
                   {user.name || "Anonymous User"}
                 </h2>
-                
-                {user.email && (
-                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-                    {user.email}
-                  </p>
-                )}
 
                 {user.bio && (
                   <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
@@ -91,30 +105,11 @@ const Page = async ({ params }: { params: Promise<{ id: string }> }) => {
 
                 {/* Navigation Buttons */}
                 <div className="space-y-2">
-                  {/* Action Buttons - Only show for own profile */}
-                  {isOwnProfile && (
-                    <>
-                      <Link
-                        href="/create"
-                        className="w-full bg-primary-blue hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 block text-center"
-                      >
-                        Create Project
-                      </Link>
-                      <Link
-                        href="/dashboard"
-                        className="w-full border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 font-medium py-2 px-4 rounded-lg transition-colors duration-200 block text-center"
-                      >
-                        Dashboard
-                      </Link>
-                    </>
-                  )}
 
                   {/* Visitor Actions */}
-                  {!isOwnProfile && (
-                    <div className="text-xs text-gray-500 dark:text-gray-400 py-2 text-center">
-                      Viewing {user.name}&apos;s profile
-                    </div>
-                  )}
+                  <div className="text-xs text-gray-500 dark:text-gray-400 py-2 text-center">
+                    Viewing {user.name}&apos;s profile
+                  </div>
                 </div>
               </div>
             </div>
@@ -124,10 +119,10 @@ const Page = async ({ params }: { params: Promise<{ id: string }> }) => {
           <div className="lg:col-span-3">
             <div className="mb-6">
               <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-                {isOwnProfile ? "My Profile" : `${user.name}&apos;s Profile`}
+                {user.name}&apos;s Profile
               </h1>
               <p className="text-gray-600 dark:text-gray-400">
-                {isOwnProfile ? "Manage your projects and track their performance" : `View all projects by ${user.name}`}
+                View all projects by {user.name}
               </p>
             </div>
 
@@ -136,16 +131,8 @@ const Page = async ({ params }: { params: Promise<{ id: string }> }) => {
               <div className="p-6 border-b border-gray-200 dark:border-gray-700">
                 <div className="flex items-center justify-between">
                   <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
-                    {isOwnProfile ? "My Projects" : `${user.name}'s Projects`}
+                    {user.name}&apos;s Projects
                   </h2>
-                  {isOwnProfile && (
-                    <Link
-                      href="/create"
-                      className="bg-primary-blue hover:bg-blue-700 text-white text-sm font-medium py-2 px-4 rounded-lg transition-colors duration-200"
-                    >
-                      + New Project
-                    </Link>
-                  )}
                 </div>
               </div>
 
@@ -170,7 +157,7 @@ const Page = async ({ params }: { params: Promise<{ id: string }> }) => {
                         {/* Project Info */}
                         <div className="flex-1 min-w-0">
                           <Link
-                            href={`/projects/${project.slug?.current || project._id}`}
+                            href={`/projects/${project._id}`}
                             className="text-lg font-semibold text-gray-900 dark:text-white hover:text-primary-blue transition-colors duration-200 block truncate"
                           >
                             {project.name}
@@ -225,16 +212,6 @@ const Page = async ({ params }: { params: Promise<{ id: string }> }) => {
                               </a>
                             )}
                           </div>
-
-                          {/* Edit Link - Only for own profile */}
-                          {isOwnProfile && (
-                            <Link
-                              href={`/projects/${project._id}/edit`}
-                              className="text-primary-blue hover:text-blue-700 transition-colors duration-200"
-                            >
-                              Edit
-                            </Link>
-                          )}
                         </div>
                       </div>
                     ))}
@@ -247,22 +224,11 @@ const Page = async ({ params }: { params: Promise<{ id: string }> }) => {
                       </svg>
                     </div>
                     <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
-                      {isOwnProfile ? "No projects yet" : "No projects published"}
+                      No projects published
                     </h3>
                     <p className="text-gray-600 dark:text-gray-400 mb-4">
-                      {isOwnProfile ? 
-                        "Get started by creating your first project" : 
-                        `${user.name} hasn't published any projects yet`
-                      }
+                      {user.name} hasn&apos;t published any projects yet.
                     </p>
-                    {isOwnProfile && (
-                      <Link
-                        href="/create"
-                        className="inline-block bg-primary-blue hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200"
-                      >
-                        Create Your First Project
-                      </Link>
-                    )}
                   </div>
                 )}
               </div>
