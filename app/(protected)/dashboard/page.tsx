@@ -50,7 +50,7 @@ async function DashboardPage() {
                   Author Profile Not Found
                 </h3>
                 <p className="text-sm text-blue-700 dark:text-blue-300 mt-1">
-                  Your author profile is being set up. Please try refreshing the page in a moment.
+                  Your author profile hasn't been created. Please go <Link href="/create">create a project</Link>.
                 </p>
               </div>
             </div>
